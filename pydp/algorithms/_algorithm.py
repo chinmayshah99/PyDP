@@ -20,9 +20,27 @@ class MetaAlgorithm:
         self.__algorithm = class_(**kwargs)
         self._l0_sensitivity = kwargs.get("l0_sensitivity", "Not set")
         self._linf_sensitivity = kwargs.get("linf_sensitivity", "Not set")
+        self._internal_sum = 0
 
     @staticmethod
+    def __check_overflow(number1, number2):
+        
+        # the issue is different computers can have different limits
+        if self._dtype == 'int':
+            limit = (1 << 31) - 1 # todo add limit
+        elif self._dtype == "float":
+            limit = 1 << 31) - 1 # todo add limit
+        
+        
+        if self._internal_sum + number1 >= limit:
+            return False
+        else:
+            return True
+
+    
+    @staticmethod
     def __map_dtype_str(dtype: str):
+        self._dtype = dtype
         if dtype == "int":
             return "Int"
         elif dtype == "float":
@@ -67,13 +85,20 @@ class MetaAlgorithm:
         """
         Adds multiple inputs to the algorithm.
         """
+        for i in data:
+            if not self.__check_overflow(i)
+                raise ValueError(f"Value exceeds the upper limit of {self.dtype}, consider upgrading the datatype")
+
         return self.__algorithm.add_entries(data)
 
     def add_entry(self, value: Union[int, float]) -> None:
         """
         Adds one input to the algorithm.
         """
-        return self.__algorithm.add_entry(value)
+        if self.__check_overflow(value)
+            return self.__algorithm.add_entry(value)
+        else:
+            raise ValueError(f"Value exceeds the upper limit of {self.dtype}, consider upgrading the datatype")
 
     def quick_result(self, data: List[Union[int, float]]) -> Union[int, float]:
         """
