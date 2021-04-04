@@ -1,11 +1,6 @@
 name: Tests
 
-on:
-  push:
-    branches:
-    - master, dev
-  pull_request:
-    types: [opened, synchronize, reopened]
+on: push
 
 jobs:
   build:
